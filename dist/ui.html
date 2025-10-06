@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      padding: 16px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 6px rgba(99, 102, 241, 0.1);
+    }
+
+    .header h1 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header p {
+      font-size: 12px;
+      opacity: 0.95;
+    }
+
+    .logo {
+      font-size: 24px;
+    }
+
+    .action-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #6366f1;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #4f46e5;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(99, 102, 241, 0.2);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+    }
+
+    .btn-secondary:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+
+    .status-section {
+      background: white;
+      padding: 16px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .stat-card {
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border-left: 3px solid #6366f1;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-top: 4px;
+    }
+
+    .warnings {
+      background: #fef3c7;
+      border: 1px solid #fbbf24;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+
+    .warnings h3 {
+      color: #92400e;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .warning-item {
+      font-size: 12px;
+      color: #78350f;
+      padding: 6px 0;
+      border-bottom: 1px solid #fde68a;
+    }
+
+    .warning-item:last-child {
+      border-bottom: none;
+    }
+
+    .features-list {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .features-header {
+      padding: 14px 16px;
+      background: #f1f5f9;
+      border-bottom: 1px solid #e2e8f0;
+      font-weight: 600;
+      font-size: 13px;
+      color: #475569;
+    }
+
+    .feature-item {
+      padding: 14px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .feature-item:hover {
+      background: #f8fafc;
+    }
+
+    .feature-item:last-child {
+      border-bottom: none;
+    }
+
+    .feature-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .status-badge {
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-widely-available {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status-newly-available {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .status-limited {
+      background: #fed7aa;
+      color: #92400e;
+    }
+
+    .feature-name {
+      font-weight: 600;
+      color: #1e293b;
+      flex: 1;
+    }
+
+    .feature-details {
+      font-size: 12px;
+      color: #64748b;
+      margin-left: 26px;
+    }
+
+    .feature-property {
+      font-family: 'Monaco', 'Courier New', monospace;
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 11px;
+      color: #6366f1;
+    }
+
+    .css-export {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .css-header {
+      padding: 14px 16px;
+      background: #1e293b;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .css-title {
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .copy-btn {
+      background: #6366f1;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: #4f46e5;
+    }
+
+    .css-code {
+      padding: 16px;
+      background: #0f172a;
+      color: #e2e8f0;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 11px;
+      line-height: 1.6;
+      max-height: 200px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #64748b;
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .empty-state h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #475569;
+    }
+
+    .empty-state p {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #e2e8f0;
+      border-top-color: #6366f1;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .node-info {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    .browser-support {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    .browser-badge {
+      font-size: 10px;
+      padding: 3px 6px;
+      background: #f1f5f9;
+      border-radius: 3px;
+      color: #475569;
+    }
+
+    .success-toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #10b981;
+      color: white;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      animation: slideIn 0.3s ease-out;
+      display: none;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(100px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1><span class="logo">🎯</span> Baseline Validator</h1>
+    <p>Validate your designs against web standards</p>
+  </div>
+
+  <div class="action-bar">
+    <button class="btn-primary" id="analyzeBtn">
+      <span id="analyzeBtnText">🔍 Analyze Design</span>
+    </button>
+    <button class="btn-secondary" id="closeBtn">Close</button>
+  </div>
+
+  <div id="content">
+    <div class="empty-state">
+      <div class="empty-state-icon">🎨</div>
+      <h3>Ready to Analyze</h3>
+      <p>Select elements in your design and click "Analyze Design"<br>to validate Baseline compatibility</p>
+    </div>
+  </div>
+
+  <div class="success-toast" id="toast">✓ CSS copied to clipboard!</div>
+
+  <script>
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const closeBtn = document.getElementById('closeBtn');
+    const content = document.getElementById('content');
+    const toast = document.getElementById('toast');
+
+    let currentAnalysis = null;
+
+    analyzeBtn.addEventListener('click', () => {
+      showLoading();
+      parent.postMessage({ pluginMessage: { type: 'analyze' } }, '*');
+    });
+
+    closeBtn.addEventListener('click', () => {
+      parent.postMessage({ pluginMessage: { type: 'close' } }, '*');
+    });
+
+    window.onmessage = (event) => {
+      const msg = event.data.pluginMessage;
+
+      if (msg.type === 'auto-analyze') {
+        setTimeout(() => {
+          showLoading();
+          parent.postMessage({ pluginMessage: { type: 'analyze' } }, '*');
+        }, 100);
+      }
+
+      if (msg.type === 'analysis-complete') {
+        currentAnalysis = msg.data;
+        displayResults(msg.data);
+      }
+    };
+
+    function showLoading() {
+      content.innerHTML = `
+        <div class="loading">
+          <div class="spinner"></div>
+          <p style="color: #64748b; font-size: 13px;">Analyzing your design...</p>
+        </div>
+      `;
+    }
+
+    function displayResults(data) {
+      const { features, nodeCount, warnings, cssCode } = data;
+
+      if (features.length === 0) {
+        content.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">✨</div>
+            <h3>No CSS Features Detected</h3>
+            <p>Try selecting frames with Auto Layout,<br>effects, or other design properties</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Count features by status
+      const statusCounts = {
+        'widely-available': 0,
+        'newly-available': 0,
+        'limited': 0
+      };
+
+      features.forEach(f => {
+        statusCounts[f.feature.status]++;
+      });
+
+      let html = `
+        <div class="status-section">
+          <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">Analysis Summary</h3>
+          <div class="status-grid">
+            <div class="stat-card">
+              <div class="stat-label">Elements Scanned</div>
+              <div class="stat-value">${nodeCount}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Features Found</div>
+              <div class="stat-value">${features.length}</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #10b981;">
+              <div class="stat-label">✅ Safe to Use</div>
+              <div class="stat-value">${statusCounts['widely-available']}</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #3b82f6;">
+              <div class="stat-label">🆕 Newly Available</div>
+              <div class="stat-value">${statusCounts['newly-available']}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Show warnings if any
+      if (warnings.length > 0) {
+        html += `
+          <div class="warnings">
+            <h3>⚠️ Compatibility Warnings</h3>
+            ${warnings.map(w => `<div class="warning-item">${w}</div>`).join('')}
+          </div>
+        `;
+      }
+
+      // Group features by status
+      const groupedFeatures = {
+        'widely-available': [],
+        'newly-available': [],
+        'limited': []
+      };
+
+      features.forEach(f => {
+        groupedFeatures[f.feature.status].push(f);
+      });
+
+      html += `<div class="features-list">`;
+      html += `<div class="features-header">📊 Detected CSS Features</div>`;
+
+      // Display features grouped by status
+      ['widely-available', 'newly-available', 'limited'].forEach(status => {
+        const statusFeatures = groupedFeatures[status];
+        if (statusFeatures.length === 0) return;
+
+        statusFeatures.forEach(detected => {
+          const statusClass = `status-${detected.feature.status}`;
+          const statusIcon = getStatusIcon(detected.feature.status);
+          const statusText = detected.feature.status.replace('-', ' ').toUpperCase();
+
+          html += `
+            <div class="feature-item" onclick="selectNode('${detected.nodeId}')">
+              <div class="feature-header">
+                <span style="font-size: 16px;">${statusIcon}</span>
+                <span class="feature-name">${detected.feature.name}</span>
+                <span class="status-badge ${statusClass}">${statusText}</span>
+              </div>
+              <div class="feature-details">
+                <div><code class="feature-property">${detected.feature.cssProperty}</code></div>
+                <div class="node-info">📍 ${detected.nodeName} • ${detected.context}</div>
+                ${detected.value ? `<div class="node-info">💡 Value: ${detected.value}</div>` : ''}
+                ${detected.feature.availableSince ? 
+                  `<div class="node-info">📆 Available since: ${detected.feature.availableSince}</div>` : ''}
+                ${detected.feature.fallback && detected.feature.status !== 'widely-available' ? 
+                  `<div class="node-info" style="color: #f59e0b;">⚡ Fallback: ${detected.feature.fallback}</div>` : ''}
+              </div>
+              <div class="browser-support">
+                ${detected.feature.browserSupport.chrome ? 
+                  `<span class="browser-badge">Chrome ${detected.feature.browserSupport.chrome}+</span>` : ''}
+                ${detected.feature.browserSupport.firefox ? 
+                  `<span class="browser-badge">Firefox ${detected.feature.browserSupport.firefox}+</span>` : ''}
+                ${detected.feature.browserSupport.safari ? 
+                  `<span class="browser-badge">Safari ${detected.feature.browserSupport.safari}+</span>` : ''}
+                ${detected.feature.browserSupport.edge ? 
+                  `<span class="browser-badge">Edge ${detected.feature.browserSupport.edge}+</span>` : ''}
+              </div>
+            </div>
+          `;
+        });
+      });
+
+      html += `</div>`;
+
+      // Add CSS export section
+      html += `
+        <div class="css-export">
+          <div class="css-header">
+            <span class="css-title">💾 Generated CSS Code</span>
+            <button class="copy-btn" onclick="copyCSSToClipboard()">Copy Code</button>
+          </div>
+          <div class="css-code" id="cssCode">${escapeHtml(cssCode)}</div>
+        </div>
+      `;
+
+      content.innerHTML = html;
+    }
+
+    function getStatusIcon(status) {
+      switch(status) {
+        case 'widely-available': return '✅';
+        case 'newly-available': return '🆕';
+        case 'limited': return '⚠️';
+        default: return '❓';
+      }
+    }
+
+    function selectNode(nodeId) {
+      parent.postMessage({ 
+        pluginMessage: { 
+          type: 'select-node', 
+          nodeId: nodeId 
+        } 
+      }, '*');
+    }
+
+    function copyCSSToClipboard() {
+      if (!currentAnalysis) return;
+      
+      const cssCode = currentAnalysis.cssCode;
+      navigator.clipboard.writeText(cssCode).then(() => {
+        showToast();
+      });
+    }
+
+    function showToast() {
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 2000);
+    }
+
+    function escapeHtml(text) {
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+      return text.replace(/[&<>"']/g, m => map[m]);
+    }
+  </script>
+</body>
+</html>

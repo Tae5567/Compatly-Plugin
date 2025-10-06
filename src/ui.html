@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 16px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .subtitle {
+      color: #718096;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 12px;
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .button-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .button-secondary {
+      background: #edf2f7;
+      color: #2d3748;
+    }
+
+    .button-secondary:hover {
+      background: #e2e8f0;
+    }
+
+    .button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .results {
+      margin-top: 20px;
+      padding: 16px;
+      background: #f7fafc;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .feature-list {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .feature-item {
+      padding: 12px;
+      background: white;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      border-left: 4px solid #667eea;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .feature-item:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transform: translateX(4px);
+    }
+
+    .feature-name {
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 4px;
+    }
+
+    .feature-status {
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      display: inline-block;
+      margin-bottom: 4px;
+    }
+
+    .status-green {
+      background: #c6f6d5;
+      color: #22543d;
+    }
+
+    .status-blue {
+      background: #bee3f8;
+      color: #2c5282;
+    }
+
+    .status-amber {
+      background: #feebc8;
+      color: #7c2d12;
+    }
+
+    .status-red {
+      background: #fed7d7;
+      color: #742a2a;
+    }
+
+    .feature-context {
+      font-size: 12px;
+      color: #718096;
+      font-family: 'Monaco', monospace;
+    }
+
+    .score-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-size: 24px;
+      font-weight: 700;
+      margin: 16px auto;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .stat-card {
+      padding: 12px;
+      background: white;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #667eea;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #718096;
+      margin-top: 4px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+    }
+
+    .spinner {
+      border: 3px solid #f3f4f6;
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .web-link {
+      display: block;
+      padding: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-align: center;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 16px;
+      transition: all 0.2s;
+    }
+
+    .web-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .warning-box {
+      padding: 12px;
+      background: #fef3c7;
+      border: 1px solid #fbbf24;
+      border-radius: 6px;
+      margin-top: 12px;
+    }
+
+    .warning-text {
+      font-size: 12px;
+      color: #78350f;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>
+      <span>✨</span> Compatly
+    </h1>
+    <p class="subtitle">Check Baseline CSS compatibility</p>
+
+    <button id="analyze" class="button button-primary">
+      Analyze Selection
+    </button>
+
+    <button id="open-web" class="button button-secondary">
+      Open in Web App
+    </button>
+
+    <div id="results" style="display: none;">
+      <div class="results">
+        <div style="text-align: center;">
+          <div class="score-badge" id="score">--</div>
+          <div style="font-weight: 600; color: #2d3748; margin-bottom: 8px;">
+            Baseline Score
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat-card">
+            <div class="stat-value" id="feature-count">0</div>
+            <div class="stat-label">Features</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="node-count">0</div>
+            <div class="stat-label">Nodes</div>
+          </div>
+        </div>
+
+        <h3 style="font-size: 16px; font-weight: 600; color: #2d3748; margin: 16px 0 12px;">
+          Detected Features
+        </h3>
+        <div class="feature-list" id="feature-list"></div>
+
+        <div id="warnings"></div>
+
+        <button id="copy-css" class="button button-secondary" style="margin-top: 16px;">
+          Copy CSS Code
+        </button>
+
+        <a href="#" id="web-app-link" class="web-link" target="_blank">
+          View Full Report in Web App →
+        </a>
+      </div>
+    </div>
+
+    <div id="loading" class="loading" style="display: none;">
+      <div class="spinner"></div>
+      <p style="color: #718096;">Analyzing design...</p>
+    </div>
+  </div>
+
+  <script>
+    const WEB_APP_URL = 'https://your-app.vercel.app'; // Replace with your deployed URL
+
+    document.getElementById('analyze').onclick = () => {
+      parent.postMessage({ pluginMessage: { type: 'analyze' } }, '*');
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('results').style.display = 'none';
+    };
+
+    document.getElementById('open-web').onclick = () => {
+      window.open(WEB_APP_URL, '_blank');
+    };
+
+    document.getElementById('copy-css').onclick = () => {
+      parent.postMessage({ pluginMessage: { type: 'copy-css' } }, '*');
+    };
+
+    window.onmessage = async (event) => {
+      const msg = event.data.pluginMessage;
+      
+      if (msg.type === 'analysis-complete') {
+        displayResults(msg.data);
+      } else if (msg.type === 'auto-analyze') {
+        document.getElementById('analyze').click();
+      } else if (msg.type === 'css-copied') {
+        alert('CSS copied to clipboard!');
+      }
+    };
+
+    function displayResults(data) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('results').style.display = 'block';
+
+      // Calculate score
+      const score = calculateScore(data.features);
+      document.getElementById('score').textContent = score;
+
+      // Update stats
+      document.getElementById('feature-count').textContent = data.features.length;
+      document.getElementById('node-count').textContent = data.nodeCount;
+
+      // Display features
+      const featureList = document.getElementById('feature-list');
+      featureList.innerHTML = '';
+
+      const groupedFeatures = groupFeaturesByKey(data.features);
+
+      Object.entries(groupedFeatures).forEach(([key, features]) => {
+        const feature = features[0].feature;
+        const statusClass = getStatusClass(feature.status);
+        
+        const item = document.createElement('div');
+        item.className = 'feature-item';
+        item.innerHTML = `
+          <div class="feature-name">${feature.name}</div>
+          <span class="feature-status ${statusClass}">${feature.status}</span>
+          <div class="feature-context">${feature.cssProperty}</div>
+          <div style="font-size: 11px; color: #a0aec0; margin-top: 4px;">
+            Used ${features.length} time${features.length > 1 ? 's' : ''}
+          </div>
+        `;
+        
+        item.onclick = () => {
+          parent.postMessage({ 
+            pluginMessage: { 
+              type: 'select-node', 
+              nodeId: features[0].nodeId 
+            } 
+          }, '*');
+        };
+        
+        featureList.appendChild(item);
+      });
+
+      // Display warnings
+      const warningsDiv = document.getElementById('warnings');
+      if (data.warnings.length > 0) {
+        warningsDiv.innerHTML = `
+          <div class="warning-box">
+            <div style="font-weight: 600; color: #78350f; margin-bottom: 8px;">
+              ⚠️ Compatibility Warnings
+            </div>
+            ${data.warnings.map(w => `
+              <div class="warning-text">• ${w}</div>
+            `).join('')}
+          </div>
+        `;
+      } else {
+        warningsDiv.innerHTML = '';
+      }
+
+      // Setup web app link with data
+      const webLink = document.getElementById('web-app-link');
+      webLink.onclick = async (e) => {
+        e.preventDefault();
+        await sendToWebApp(data);
+      };
+    }
+
+    async function sendToWebApp(data) {
+      try {
+        // Send data to web app API
+        const response = await fetch(`${WEB_APP_URL}/api/figma-webhook`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            features: data.features,
+            nodeCount: data.nodeCount,
+            cssCode: data.cssCode,
+            warnings: data.warnings
+          })
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          // Open web app with analysis ID
+          window.open(`${WEB_APP_URL}?analysis=${result.data.id}`, '_blank');
+        } else {
+          // Fallback: open with data in URL params (limited)
+          const encodedData = encodeURIComponent(JSON.stringify({
+            features: data.features.slice(0, 5), // Limit for URL
+            score: calculateScore(data.features)
+          }));
+          window.open(`${WEB_APP_URL}?data=${encodedData}`, '_blank');
+        }
+      } catch (error) {
+        console.error('Failed to send to web app:', error);
+        // Fallback: just open the web app
+        window.open(WEB_APP_URL, '_blank');
+      }
+    }
+
+    function calculateScore(features) {
+      if (features.length === 0) return 100;
+      
+      const weights = {
+        'widely-available': 1,
+        'newly-available': 0.7,
+        'limited': 0.3,
+        'not-available': 0
+      };
+      
+      const totalWeight = features.reduce((sum, f) => {
+        return sum + (weights[f.feature.status] || 0);
+      }, 0);
+      
+      return Math.round((totalWeight / features.length) * 100);
+    }
+
+    function groupFeaturesByKey(features) {
+      return features.reduce((acc, f) => {
+        if (!acc[f.featureKey]) {
+          acc[f.featureKey] = [];
+        }
+        acc[f.featureKey].push(f);
+        return acc;
+      }, {});
+    }
+
+    function getStatusClass(status) {
+      switch(status) {
+        case 'widely-available': return 'status-green';
+        case 'newly-available': return 'status-blue';
+        case 'limited': return 'status-amber';
+        case 'not-available': return 'status-red';
+        default: return 'status-green';
+      }
+    }
+  </script>
+</body>
+</html>

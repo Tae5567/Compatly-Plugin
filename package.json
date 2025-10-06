@@ -1,0 +1,23 @@
+{
+  "name": "compatly-plugin",
+  "version": "1.0.0",
+  "description": "Validate Figma designs against web.dev Baseline standards",
+  "main": "dist/code.js",
+  "scripts": {
+    "build": "node build.js",
+    "watch": "node build.js --watch"
+  },
+  "keywords": [
+    "figma",
+    "baseline",
+    "css"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "type": "commonjs",
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.117.1",
+    "esbuild": "^0.25.10",
+    "typescript": "^5.9.3"
+  }
+}
