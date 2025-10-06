@@ -308,14 +308,26 @@ function generateCSS(features: DetectedFeature[]): string {
   return css;
 }
 
-// Message handlers
+// Message handlers - FIXED: Added console logs for debugging
 figma.ui.onmessage = async (msg) => {
+  console.log('Received message:', msg);
+  
   if (msg.type === 'analyze') {
-    const result = await analyzeDesign();
-    figma.ui.postMessage({
-      type: 'analysis-complete',
-      data: result
-    });
+    console.log('Starting analysis...');
+    try {
+      const result = await analyzeDesign();
+      console.log('Analysis complete:', result);
+      figma.ui.postMessage({
+        type: 'analysis-complete',
+        data: result
+      });
+    } catch (error) {
+      console.error('Analysis error:', error);
+      figma.ui.postMessage({
+        type: 'error',
+        message: 'Failed to analyze design'
+      });
+    }
   }
 
   if (msg.type === 'select-node') {
@@ -341,9 +353,9 @@ figma.ui.onmessage = async (msg) => {
   }
 };
 
-// Auto-analyze on load if there's a selection
-if (figma.currentPage.selection.length > 0) {
-  setTimeout(() => {
+// FIXED: Improved auto-analyze with better timing
+setTimeout(() => {
+  if (figma.currentPage.selection.length > 0) {
     figma.ui.postMessage({ type: 'auto-analyze' });
-  }, 500);
-}
+  }
+}, 100);

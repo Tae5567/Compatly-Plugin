@@ -486,12 +486,23 @@
         return css;
       }
       figma.ui.onmessage = async (msg) => {
+        console.log("Received message:", msg);
         if (msg.type === "analyze") {
-          const result = await analyzeDesign();
-          figma.ui.postMessage({
-            type: "analysis-complete",
-            data: result
-          });
+          console.log("Starting analysis...");
+          try {
+            const result = await analyzeDesign();
+            console.log("Analysis complete:", result);
+            figma.ui.postMessage({
+              type: "analysis-complete",
+              data: result
+            });
+          } catch (error) {
+            console.error("Analysis error:", error);
+            figma.ui.postMessage({
+              type: "error",
+              message: "Failed to analyze design"
+            });
+          }
         }
         if (msg.type === "select-node") {
           const node = figma.getNodeById(msg.nodeId);
@@ -512,11 +523,11 @@
           figma.closePlugin();
         }
       };
-      if (figma.currentPage.selection.length > 0) {
-        setTimeout(() => {
+      setTimeout(() => {
+        if (figma.currentPage.selection.length > 0) {
           figma.ui.postMessage({ type: "auto-analyze" });
-        }, 500);
-      }
+        }
+      }, 100);
     }
   });
   require_code();

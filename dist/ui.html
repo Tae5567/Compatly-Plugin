@@ -330,34 +330,91 @@
     const WEB_APP_URL = 'https://compatlychecker.netlify.app/'; 
     let currentAnalysisData = null;
 
-    document.getElementById('analyze').onclick = () => {
-      parent.postMessage({ pluginMessage: { type: 'analyze' } }, '*');
-      document.getElementById('loading').style.display = 'block';
-      document.getElementById('results').style.display = 'none';
-    };
+    // FIXED: Proper message posting to Figma plugin
+    function sendToPlugin(message) {
+      console.log('Sending to plugin:', message);
+      parent.postMessage({ pluginMessage: message }, '*');
+    }
 
-    document.getElementById('open-web').onclick = () => {
-      window.open(WEB_APP_URL, '_blank');
-    };
+    // FIXED: Event listeners with proper initialization
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM loaded, attaching event listeners');
+      
+      const analyzeBtn = document.getElementById('analyze');
+      const openWebBtn = document.getElementById('open-web');
+      const copyCssBtn = document.getElementById('copy-css');
+      const webAppLink = document.getElementById('web-app-link');
 
-    document.getElementById('copy-css').onclick = () => {
-      parent.postMessage({ pluginMessage: { type: 'copy-css' } }, '*');
-    };
+      if (analyzeBtn) {
+        analyzeBtn.addEventListener('click', function() {
+          console.log('Analyze button clicked');
+          sendToPlugin({ type: 'analyze' });
+          document.getElementById('loading').style.display = 'block';
+          document.getElementById('results').style.display = 'none';
+        });
+      }
 
-    document.getElementById('web-app-link').onclick = () => {
-      sendToWebApp(currentAnalysisData);
-    };
+      if (openWebBtn) {
+        openWebBtn.addEventListener('click', function() {
+          console.log('Open web button clicked');
+          window.open(WEB_APP_URL, '_blank');
+        });
+      }
+
+      if (copyCssBtn) {
+        copyCssBtn.addEventListener('click', function() {
+          console.log('Copy CSS button clicked');
+          sendToPlugin({ type: 'copy-css' });
+        });
+      }
+
+      if (webAppLink) {
+        webAppLink.addEventListener('click', function() {
+          console.log('Web app link clicked');
+          sendToWebApp(currentAnalysisData);
+        });
+      }
+    });
+
+    // Also add onclick as backup (immediate execution)
+    setTimeout(function() {
+      const analyzeBtn = document.getElementById('analyze');
+      if (analyzeBtn && !analyzeBtn.onclick) {
+        analyzeBtn.onclick = function() {
+          console.log('Analyze button clicked (fallback)');
+          sendToPlugin({ type: 'analyze' });
+          document.getElementById('loading').style.display = 'block';
+          document.getElementById('results').style.display = 'none';
+        };
+      }
+
+      const openWebBtn = document.getElementById('open-web');
+      if (openWebBtn && !openWebBtn.onclick) {
+        openWebBtn.onclick = function() {
+          console.log('Open web button clicked (fallback)');
+          window.open(WEB_APP_URL, '_blank');
+        };
+      }
+    }, 100);
 
     window.onmessage = async (event) => {
       const msg = event.data.pluginMessage;
+      console.log('Received from plugin:', msg);
       
       if (msg.type === 'analysis-complete') {
         currentAnalysisData = msg.data;
         displayResults(msg.data);
       } else if (msg.type === 'auto-analyze') {
-        document.getElementById('analyze').click();
+        console.log('Auto-analyze triggered');
+        sendToPlugin({ type: 'analyze' });
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('results').style.display = 'none';
       } else if (msg.type === 'css-to-copy') {
         copyToClipboard(msg.css);
+      } else if (msg.type === 'error') {
+        console.error('Plugin error:', msg.message);
+        document.getElementById('loading').style.display = 'none';
+        alert(msg.message || 'An error occurred');
       }
     };
 
@@ -384,6 +441,7 @@
     }
 
     function displayResults(data) {
+      console.log('Displaying results:', data);
       document.getElementById('loading').style.display = 'none';
       document.getElementById('results').style.display = 'block';
 
@@ -417,12 +475,10 @@
         `;
         
         item.onclick = () => {
-          parent.postMessage({ 
-            pluginMessage: { 
-              type: 'select-node', 
-              nodeId: features[0].nodeId 
-            } 
-          }, '*');
+          sendToPlugin({ 
+            type: 'select-node', 
+            nodeId: features[0].nodeId 
+          });
         };
         
         featureList.appendChild(item);
@@ -461,7 +517,6 @@
         const encoded = encodeURIComponent(JSON.stringify(shareData));
         const url = `${WEB_APP_URL}?data=${encoded}`;
         
-        // For local development, use postMessage instead
         const newWindow = window.open(url, '_blank');
         
         // Wait a bit and send data via postMessage
@@ -519,3 +574,9 @@
         default: return 'status-green';
       }
     }
+
+    // Log when script loads
+    console.log('UI script loaded successfully');
+  </script>
+</body>
+</html>
