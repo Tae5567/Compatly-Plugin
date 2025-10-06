@@ -330,13 +330,13 @@
     const WEB_APP_URL = 'https://compatlychecker.netlify.app/'; 
     let currentAnalysisData = null;
 
-    // FIXED: Proper message posting to Figma plugin
+    // Proper message posting to Figma plugin
     function sendToPlugin(message) {
       console.log('Sending to plugin:', message);
       parent.postMessage({ pluginMessage: message }, '*');
     }
 
-    // FIXED: Event listeners with proper initialization
+    // Event listeners with proper initialization
     document.addEventListener('DOMContentLoaded', function() {
       console.log('DOM loaded, attaching event listeners');
       

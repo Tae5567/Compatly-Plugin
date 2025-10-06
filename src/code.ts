@@ -308,7 +308,7 @@ function generateCSS(features: DetectedFeature[]): string {
   return css;
 }
 
-// Message handlers - FIXED: Added console logs for debugging
+// Message handlers 
 figma.ui.onmessage = async (msg) => {
   console.log('Received message:', msg);
   
@@ -353,7 +353,7 @@ figma.ui.onmessage = async (msg) => {
   }
 };
 
-// FIXED: Improved auto-analyze with better timing
+// Improved auto-analyze with better timing
 setTimeout(() => {
   if (figma.currentPage.selection.length > 0) {
     figma.ui.postMessage({ type: 'auto-analyze' });
