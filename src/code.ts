@@ -1,9 +1,5 @@
 //Main plugin code
 
-// Declare Figma global types
-//declare const figma: any;
-//declare const __html__: string;
-
 import { BASELINE_FEATURES, BaselineFeature, BaselineStatus } from './baseline-data';
 
 figma.showUI(__html__, { 
@@ -27,6 +23,9 @@ interface AnalysisResult {
   warnings: string[];
   cssCode: string;
 }
+
+// Store the latest CSS code for copying
+let latestCSSCode = '';
 
 // Analyze the current selection or page
 async function analyzeDesign(): Promise<AnalysisResult> {
@@ -97,7 +96,7 @@ async function analyzeDesign(): Promise<AnalysisResult> {
       }
     }
 
-    // Check for aspect ratio (if frame has specific proportions)
+    // Check for aspect ratio 
     if ('width' in node && 'height' in node) {
       const width = node.width;
       const height = node.height;
@@ -224,17 +223,18 @@ async function analyzeDesign(): Promise<AnalysisResult> {
   uniqueFeatures.forEach(detected => {
     if (detected.feature.status === 'newly-available') {
       warnings.push(
-        `⚠️ ${detected.feature.name} is newly available. Consider providing fallbacks for older browsers.`
+        `${detected.feature.name} is newly available. Consider providing fallbacks for older browsers.`
       );
     } else if (detected.feature.status === 'limited') {
       warnings.push(
-        `❌ ${detected.feature.name} has limited browser support. ${detected.feature.fallback || 'Use alternative approach.'}`
+        `${detected.feature.name} has limited browser support. ${detected.feature.fallback || 'Use alternative approach.'}`
       );
     }
   });
 
   // Generate CSS code
   const cssCode = generateCSS(uniqueFeatures);
+  latestCSSCode = cssCode; // Store for copying
 
   return {
     features: uniqueFeatures,
@@ -264,7 +264,8 @@ function generateCSS(features: DetectedFeature[]): string {
     }
 
     detectedList.forEach(detected => {
-      css += `.${detected.nodeName.toLowerCase().replace(/\s+/g, '-')} {\n`;
+      const className = detected.nodeName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+      css += `.${className} {\n`;
       
       switch (detected.featureKey) {
         case 'flexbox':
@@ -295,6 +296,9 @@ function generateCSS(features: DetectedFeature[]): string {
         case 'transform':
           css += `  transform: rotate(${detected.value});\n`;
           break;
+        case 'blend-mode':
+          css += `  mix-blend-mode: ${detected.value};\n`;
+          break;
       }
       
       css += `}\n\n`;
@@ -323,7 +327,13 @@ figma.ui.onmessage = async (msg) => {
   }
 
   if (msg.type === 'copy-css') {
-    // CSS copying is handled in the UI
+    // Copy CSS to clipboard
+    if (latestCSSCode) {
+      figma.ui.postMessage({
+        type: 'css-to-copy',
+        css: latestCSSCode
+      });
+    }
   }
 
   if (msg.type === 'close') {
