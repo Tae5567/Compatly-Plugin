@@ -228,6 +228,7 @@
         height: 700,
         themeColors: true
       });
+      var latestCSSCode = "";
       async function analyzeDesign() {
         const selection = figma.currentPage.selection;
         const nodesToAnalyze = selection.length > 0 ? selection : [figma.currentPage];
@@ -389,15 +390,16 @@
         uniqueFeatures.forEach((detected) => {
           if (detected.feature.status === "newly-available") {
             warnings.push(
-              `\u26A0\uFE0F ${detected.feature.name} is newly available. Consider providing fallbacks for older browsers.`
+              `${detected.feature.name} is newly available. Consider providing fallbacks for older browsers.`
             );
           } else if (detected.feature.status === "limited") {
             warnings.push(
-              `\u274C ${detected.feature.name} has limited browser support. ${detected.feature.fallback || "Use alternative approach."}`
+              `${detected.feature.name} has limited browser support. ${detected.feature.fallback || "Use alternative approach."}`
             );
           }
         });
         const cssCode = generateCSS(uniqueFeatures);
+        latestCSSCode = cssCode;
         return {
           features: uniqueFeatures,
           nodeCount,
@@ -428,7 +430,8 @@
           }
           detectedList.forEach((detected) => {
             var _a, _b;
-            css += `.${detected.nodeName.toLowerCase().replace(/\s+/g, "-")} {
+            const className = detected.nodeName.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+            css += `.${className} {
 `;
             switch (detected.featureKey) {
               case "flexbox":
@@ -470,6 +473,10 @@
                 css += `  transform: rotate(${detected.value});
 `;
                 break;
+              case "blend-mode":
+                css += `  mix-blend-mode: ${detected.value};
+`;
+                break;
             }
             css += `}
 
@@ -494,6 +501,12 @@
           }
         }
         if (msg.type === "copy-css") {
+          if (latestCSSCode) {
+            figma.ui.postMessage({
+              type: "css-to-copy",
+              css: latestCSSCode
+            });
+          }
         }
         if (msg.type === "close") {
           figma.closePlugin();
